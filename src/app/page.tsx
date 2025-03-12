@@ -5,41 +5,74 @@ import axios from 'axios';
 import { AuthContext } from "./contexts/AuthContext";
 import Image from 'next/image';
 
+// interface Article {
+//   source: { id: string | null; name: string };
+//   author: string | null;
+//   title: string;
+//   description: string | null;
+//   url: string;
+//   urlToImage: string | null;
+//   publishedAt: string;
+//   content: string | null;
+// }
+
 interface Article {
   source: { id: string | null; name: string };
   author: string | null;
   title: string;
-  description: string | null;
+  description: string;
   url: string;
   urlToImage: string | null;
   publishedAt: string;
   content: string | null;
 }
 
+interface NewsData {
+  status: string;
+  totalResults: number;
+  articles: Article[];
+}
+
 export default function HomePage() {
 
-  const language = 'en';
-  const q = 'crypto';
-  const pageSize = '10';
-  const API_URL = `https://newsapi.org/v2/everything?language=${language}&pageSize=${pageSize}&q=${q}&apiKey=b3525f00389c4c6884d04c85ee038c20`;
+  // const language = 'en';
+  // const q = 'crypto';
+  // const pageSize = '10';
+  // const API_URL = `https://newsapi.org/v2/everything?language=${language}&pageSize=${pageSize}&q=${q}&apiKey=b3525f00389c4c6884d04c85ee038c20`;
 
+  // const [articles, setArticles] = useState<Article[]>([]);
+  // const [loading, setLoading] = useState(true);
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const { session } = useContext(AuthContext);
 
+  // useEffect(() => {
+  //   const fetchNews = async () => {
+  //     try {
+  //       const response = await axios.get(API_URL);
+  //       setArticles(response.data.articles);
+  //     } catch (error) {
+  //       console.error(error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchNews();
+  // }, []);
   useEffect(() => {
-    const fetchNews = async () => {
+    async function fetchNews() {
       try {
-        const response = await axios.get(API_URL);
-        setArticles(response.data.articles);
+        const res = await fetch('/api/news');
+        const data: NewsData = await res.json();
+        setArticles(data.articles);
       } catch (error) {
-        console.error(error);
+        console.error('ニュースの取得に失敗しました:', error);
       } finally {
         setLoading(false);
       }
-    };
+    }
     fetchNews();
-  }, [API_URL]);
+  }, []);
 
   if (loading) return <p className='text-center mt-10'>読み込み中...</p>;
 

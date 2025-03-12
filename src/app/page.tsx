@@ -27,7 +27,7 @@ export default function HomePage() {
 
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  // const [error, setError] = useState("");
   // const [user, setUser] = useState<User | null>(null);
   // const router = useRouter();
   const { session } = useContext(AuthContext);
@@ -36,16 +36,17 @@ export default function HomePage() {
     const fetchNews = async () => {
       try {
         const response = await axios.get(API_URL);
+        // console.log(response.error);
         setArticles(response.data.articles);
-      } catch (_err) { // eslint-disable-line @typescript-eslint/no-unused-vars
-        setError("Failed to fetch news");
-        console.error(error); 
+      } catch (error) {
+        // setError("Failed to fetch news");
+        console.error(error);
       } finally {
         setLoading(false);
       }
     };
     fetchNews();
-  }, [API_URL,error]);
+  }, [API_URL]);
 
   if (loading) return <p className='text-center mt-10'>読み込み中...</p>;
 

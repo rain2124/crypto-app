@@ -14,14 +14,12 @@ export default function Header() {
         <Link href="/" className="text-white text-xl font-bold">
           Crypto News
         </Link>
-
         {/* Hamburger Menu for Mobile */}
         <div className="md:hidden">
           <button onClick={() => setIsOpen(!isOpen)}>
             {isOpen ? <X className="text-white w-6 h-6" /> : <Menu className="text-white w-6 h-6" />}
           </button>
         </div>
-
         {/* Desktop Menu */}
         <ul className="hidden md:flex space-x-6 text-white items-center">
           <li>
@@ -31,13 +29,9 @@ export default function Header() {
           <li>
             <Link href="/signup">SignUp</Link>
           </li>
-          <li>
-            <Link href="/calender">Calender</Link>
-          </li>
           {session ? <li><LogoutButton /></li> : <></> }
         </ul>
       </div>
-
       {/* Mobile Menu */}
       {isOpen && (
         <ul className="md:hidden bg-blue-700 text-white flex flex-col space-y-4 p-4 mt-[10px]">
@@ -47,9 +41,6 @@ export default function Header() {
           {session ? <></> : <li><Link href="/signin" onClick={() => setIsOpen(false)}>SignIn</Link></li> }
           <li>
             <Link href="/signup" onClick={() => setIsOpen(false)}>SignUp</Link>
-          </li>
-          <li>
-            <Link href="/calender" onClick={() => setIsOpen(false)}>calender</Link>
           </li>
           {session ? <li><LogoutButton /></li> : <></> }
         </ul>

@@ -1,20 +1,8 @@
 
 "use client"
 import { useContext, useEffect, useState } from 'react';
-// import axios from 'axios';
 import { AuthContext } from "./contexts/AuthContext";
 import Image from 'next/image';
-
-// interface Article {
-//   source: { id: string | null; name: string };
-//   author: string | null;
-//   title: string;
-//   description: string | null;
-//   url: string;
-//   urlToImage: string | null;
-//   publishedAt: string;
-//   content: string | null;
-// }
 
 interface Article {
   source: { id: string | null; name: string };
@@ -35,30 +23,10 @@ interface NewsData {
 
 export default function HomePage() {
 
-  // const language = 'en';
-  // const q = 'crypto';
-  // const pageSize = '10';
-  // const API_URL = `https://newsapi.org/v2/everything?language=${language}&pageSize=${pageSize}&q=${q}&apiKey=b3525f00389c4c6884d04c85ee038c20`;
-
-  // const [articles, setArticles] = useState<Article[]>([]);
-  // const [loading, setLoading] = useState(true);
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const { session } = useContext(AuthContext);
 
-  // useEffect(() => {
-  //   const fetchNews = async () => {
-  //     try {
-  //       const response = await axios.get(API_URL);
-  //       setArticles(response.data.articles);
-  //     } catch (error) {
-  //       console.error(error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchNews();
-  // }, []);
   useEffect(() => {
     async function fetchNews() {
       try {

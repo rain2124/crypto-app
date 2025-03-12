@@ -12,7 +12,8 @@ export async function GET() {
   const language = 'en';
   const q = 'crypto';
   const pageSize = '10';
-  const apiUrl = `https://newsapi.org/v2/everything?language=${language}&pageSize=${pageSize}&q=${q}&apiKey=${apiKey}`;
+  // const apiUrl = `https://newsapi.org/v2/everything?language=${language}&pageSize=${pageSize}&q=${q}&apiKey=${apiKey}`;
+  const apiUrl = `https://newsapi.org/v2/top-headlines?country=jp&apiKey=${apiKey}`;
   const response = await fetch(apiUrl);
 
   if (!response.ok) {

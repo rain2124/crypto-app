@@ -4,7 +4,6 @@ import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { AuthContext } from "./contexts/AuthContext";
 import Image from 'next/image';
-import NewsList from '@/app/components/NewsList';
 
 interface Article {
   source: { id: string | null; name: string };
@@ -19,35 +18,34 @@ interface Article {
 
 export default function HomePage() {
 
-  // const language = 'en';
-  // const q = 'crypto';
-  // const pageSize = '10';
-  // const API_URL = `https://newsapi.org/v2/everything?language=${language}&pageSize=${pageSize}&q=${q}&apiKey=b3525f00389c4c6884d04c85ee038c20`;
+  const language = 'en';
+  const q = 'crypto';
+  const pageSize = '10';
+  const API_URL = `https://newsapi.org/v2/everything?language=${language}&pageSize=${pageSize}&q=${q}&apiKey=b3525f00389c4c6884d04c85ee038c20`;
 
-  // const [articles, setArticles] = useState<Article[]>([]);
-  // const [loading, setLoading] = useState(true);
-  // const { session } = useContext(AuthContext);
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { session } = useContext(AuthContext);
 
-  // useEffect(() => {
-  //   const fetchNews = async () => {
-  //     try {
-  //       const response = await axios.get(API_URL);
-  //       setArticles(response.data.articles);
-  //     } catch (error) {
-  //       console.error(error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchNews();
-  // }, [API_URL]);
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const response = await axios.get(API_URL);
+        setArticles(response.data.articles);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchNews();
+  }, [API_URL]);
 
-  // if (loading) return <p className='text-center mt-10'>読み込み中...</p>;
+  if (loading) return <p className='text-center mt-10'>読み込み中...</p>;
 
   return (
     <>
-    <NewsList />
-    {/* <div className="px-6 py-10">
+    <div className="px-6 py-10">
       <div>ログイン状況 : {session ? <span>ログイン中</span> : <span>未ログイン</span> }</div>
       <h1 className="text-3xl font-bold">NEWS一覧</h1>
       <div className='grid-cols-2 gap-6 grid md:grid-cols-3 md:gap-8'>
@@ -74,7 +72,7 @@ export default function HomePage() {
           <p>記事は見つかりません。</p>
         ) }
       </div>
-    </div> */}
+    </div>
     </>
   );
 }

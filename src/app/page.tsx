@@ -42,36 +42,36 @@ export default function HomePage() {
     fetchNews();
   }, []);
 
-  if (loading) return <p className='text-center mt-10'>読み込み中...</p>;
-
   return (
     <>
     <div className="px-6 py-10">
       <div>ログイン状況 : {session ? <span>ログイン中</span> : <span>未ログイン</span> }</div>
       <h1 className="text-3xl font-bold">NEWS一覧</h1>
       <div className='grid-cols-2 gap-6 grid md:grid-cols-3 md:gap-8'>
-        {articles.length > 0 ? (
-          articles.map( (article, index) => (
-            <div key={index} className="mt-4 border-b pb-4">
-              <h2 className="text-xl font-semibold line-clamp-2">{article.title}</h2>
-              {article.urlToImage &&
-                <Image
-                  src={article.urlToImage}
-                  alt={article.title}
-                  width={500}
-                  height={300}
-                  className="mt-2 h-48 w-full object-cover"
-                />
-              }
-              <p className="mt-2 line-clamp-3">{article.description}</p>
-              <a href={article.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
-                Read more
-              </a>
-            </div>
-          ))
-        ) : (
-          <p>記事は見つかりません。</p>
-        ) }
+      {loading ? (
+        <p>読み込み中...</p>
+      ) : articles.length > 0 ? (
+        articles.map((article, idx) => (
+          <div key={idx} className="mt-4 border-b pb-4">
+            <h2 className="text-xl font-semibold line-clamp-2">{article.title}</h2>
+            {article.urlToImage && (
+              <Image
+                src={article.urlToImage}
+                alt={article.title}
+                width={500}
+                height={300}
+                className="mt-2 h-48 w-full object-cover"
+              />
+            )}
+            <p className="mt-2 line-clamp-3">{article.description}</p>
+            <a href={article.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+              Read more
+            </a>
+          </div>
+        ))
+      ) : (
+        <p>ニュースが見つかりませんでした。</p>
+      )}
       </div>
     </div>
     </>

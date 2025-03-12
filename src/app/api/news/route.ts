@@ -1,7 +1,7 @@
 // app/api/news/route.ts
 import { NextResponse } from 'next/server';
 
-export async function GET(request: Request) {
+export async function GET() {
   const apiKey = process.env.NEXT_PUBLIC_NEWS_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
@@ -13,7 +13,6 @@ export async function GET(request: Request) {
   const q = 'crypto';
   const pageSize = '10';
   const apiUrl = `https://newsapi.org/v2/everything?language=${language}&pageSize=${pageSize}&q=${q}&apiKey=${apiKey}`;
-  // const apiUrl = `https://newsapi.org/v2/top-headlines?country=jp&apiKey=${apiKey}`;
   const response = await fetch(apiUrl);
 
   if (!response.ok) {

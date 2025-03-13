@@ -50,7 +50,7 @@ export default function HomePage() {
       <div className='grid-cols-2 gap-6 grid md:grid-cols-3 md:gap-8'>
       {loading ? (
         <p>読み込み中...</p>
-      ) : articles.length > 0 ? (
+      ) : articles?.length > 0 ? (
         articles.map((article, idx) => (
           <div key={idx} className="mt-4 border-b pb-4">
             <h2 className="text-xl font-semibold line-clamp-2">{article.title}</h2>

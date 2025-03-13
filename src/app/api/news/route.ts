@@ -2,19 +2,20 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const apiKey = process.env.NEXT_PUBLIC_NEWS_API_KEY;
+  const apiKey = process.env.NEWS_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
       { error: 'NewsAPI の API キーが設定されていません。' },
       { status: 500 }
     );
   }
-  // const language = 'en';
-  // const q = 'crypto';
-  // const pageSize = '10';
-  // const apiUrl = `https://newsapi.org/v2/everything?language=${language}&pageSize=${pageSize}&q=${q}&apiKey=${apiKey}`;
-  const apiUrl = `https://newsapi.org/v2/everything?language=en&pageSize=10&q=crypto&apiKey=${apiKey}`;
-  const response = await fetch(apiUrl);
+  const language = 'en';
+  const q = 'crypto';
+  const pageSize = '10';
+  const apiUrl = `https://newsapi.org/v2/everything?language=${language}&pageSize=${pageSize}&q=${q}&apiKey=${apiKey}`;
+  const response = await fetch(apiUrl, {
+    next: { revalidate: 600 }
+  });
 
   if (!response.ok) {
     return NextResponse.json(

@@ -9,10 +9,11 @@ export async function GET() {
       { status: 500 }
     );
   }
-  const language = 'en';
-  const q = 'crypto';
-  const pageSize = '10';
-  const apiUrl = `https://newsapi.org/v2/everything?language=${language}&pageSize=${pageSize}&q=${q}&apiKey=${apiKey}`;
+  // const language = 'en';
+  // const q = 'crypto';
+  // const pageSize = '10';
+  // const apiUrl = `https://newsapi.org/v2/everything?language=${language}&pageSize=${pageSize}&q=${q}&apiKey=${apiKey}`;
+  const apiUrl = `https://newsapi.org/v2/everything?language=en&pageSize=10&q=crypto&apiKey=${apiKey}`;
   const response = await fetch(apiUrl);
 
   if (!response.ok) {

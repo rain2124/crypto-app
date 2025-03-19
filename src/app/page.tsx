@@ -1,32 +1,11 @@
 "use client"
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from "./contexts/AuthContext";
-import { Article } from '../../type/Article';
-import { NewsData } from '../../type/Article';
 import { NewsArticle } from '../../type/Article';
-// import { supabase } from '../../lib/supabaseClient';
-// import { uploadStorage } from './components/storage';
 import Image from 'next/image';
 import { v4 as uuidv4 } from "uuid";
 
 export default function HomePage() {
-  // const [articles, setArticles] = useState<Article[]>([]);
-  // const [loading, setLoading] = useState(true);
-  // const { session } = useContext(AuthContext);
-  // useEffect(() => {
-  //   async function fetchNews() {
-  //     try {
-  //       const res = await fetch('/api/news');
-  //       const data: NewsData = await res.json();
-  //       setArticles(data.articles);
-  //     } catch (error) {
-  //       console.error('ニュースの取得に失敗しました:', error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   }
-  //   fetchNews();
-  // }, []);
 
   const [articles, setArticles] = useState<NewsArticle[]>([]);
   const [message, setMessage] = useState<string>('');
@@ -37,8 +16,6 @@ export default function HomePage() {
   const fetchNewsArticles = async () => {
     setLoading(true);
     try {
-      // const apiKey = process.env.NEXT_PUBLIC_NEWS_API_KEY;
-      // const newsApiUrl = `https://newsapi.org/v2/top-headlines?country=us&pageSize=10&apiKey=${apiKey}`;
       const apiKey = process.env.NEXT_PUBLIC_NEWS_API_KEY;
       const language = 'en';
       const q = 'crypto';
@@ -60,6 +37,7 @@ export default function HomePage() {
     fetchNewsArticles();
   }, []);
 
+  // 選択した記事を API 経由で Supabase の mylist に追加する処理
   const addArticle = async (article: NewsArticle) => {
     try {
       setMessage('記事を追加中...');

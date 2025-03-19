@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { v4 as uuidv4 } from "uuid";
 
 export default function HomePage() {
-
   const [articles, setArticles] = useState<NewsArticle[]>([]);
   const [message, setMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -25,8 +24,12 @@ export default function HomePage() {
       if (!res.ok) throw new Error('News API の取得に失敗しました');
       const data = await res.json();
       setArticles(data.articles);
-    } catch (error: any) {
-      setMessage(error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        setMessage(error.message);
+      } else {
+        console.error('Unexpected error', error);
+      }
     } finally {
       setLoading(false);
     }
@@ -37,7 +40,7 @@ export default function HomePage() {
     fetchNewsArticles();
   }, []);
 
-  // 選択した記事を API 経由で Supabase の mylist に追加する処理
+  // 選択した記事を API 経由で Supabase の mynews に追加する処理
   const addArticle = async (article: NewsArticle) => {
     try {
       setMessage('記事を追加中...');
@@ -56,18 +59,22 @@ export default function HomePage() {
       if (!res.ok) throw new Error('記事の登録に失敗しました');
       const result = await res.json();
       setMessage(result.message || '記事が追加されました');
-    } catch (error: any) {
-      setMessage(error.message);
+    } catch (error) { 
+      if (error instanceof Error) {
+        setMessage(error.message);
+      } else {
+        console.error('Unexpected error', error);
+      }
     }
   };
 
   return (
     <>
     <div className="px-6 py-10">
-      {/* sessiion test */}
       <div>ログイン状況 : {session ? <span>ログイン中</span> : <span>未ログイン</span> }</div>
       <h1 className="text-3xl font-bold mb-6">CRYPTO NEWS</h1>
       <div className='grid-cols-2 gap-6 grid md:grid-cols-3 md:gap-8'>
+      {message && <p className="mt-4">{message}</p>}
       {loading ? (
         <p>Loading...</p>
       ) : articles?.length > 0 ? (

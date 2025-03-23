@@ -19,7 +19,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
-    // 初回ロード時のセッション取得
+    // TODO: ベストなのは 各ページでつど拾う 練習として　midleware / もしくはuser情報のみ 初回ロード時のセッション取得 
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
     });

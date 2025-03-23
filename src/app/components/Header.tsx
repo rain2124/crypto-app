@@ -25,6 +25,7 @@ export default function Header() {
           <li>
             <Link href="/">Home</Link>
           </li>
+          {session ? <li><Link href="/mynews">MyNews</Link></li> : <></> }
           {session ? <></> : <li><Link href="/signin">SignIn</Link></li> }
           <li>
             <Link href="/signup">SignUp</Link>
@@ -38,6 +39,7 @@ export default function Header() {
           <li>
             <Link href="/" onClick={() => setIsOpen(false)}>Home</Link>
           </li>
+          {session ? <li><Link href="/mynews">MyNews</Link></li> : <></> }
           {session ? <></> : <li><Link href="/signin" onClick={() => setIsOpen(false)}>SignIn</Link></li> }
           <li>
             <Link href="/signup" onClick={() => setIsOpen(false)}>SignUp</Link>

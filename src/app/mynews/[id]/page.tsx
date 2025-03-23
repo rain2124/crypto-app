@@ -1,10 +1,11 @@
 "use client";
 import React, { useEffect, useState } from 'react'
-// import { supabase } from '../../../../lib/supabaseClient';
+import { supabase } from '../../../../lib/supabaseClient';
 import { use } from 'react';
 import { FetchMyNewsDetail } from '@/app/api/fetchApi';
+import { FetchComments } from '@/app/api/fetchApi';
 import { NewsArticle } from '../../../../type/Article';
-// import { Comments } from '../../../../type/Article';
+import { CommentType } from '../../../../type/Article';
 import Image from 'next/image';
 
 export default function MyNewsDetail({ params }: { params: Promise<NewsArticle> }) {
@@ -14,8 +15,9 @@ export default function MyNewsDetail({ params }: { params: Promise<NewsArticle> 
   const { id } = use(params);
 
   // comments
-  // const [comment, setComment] = useState<string>("");
-  // const [comments, setComments] = useState<Comments[]>([]);
+  const [comment, setComment] = useState<string>("");
+  const [commentMessage, setCommentMessage] = useState<string>('');
+  const [commentList, setCommentList] = useState<CommentType | null>(null);
 
   const FetchMyNewsDetailData = async () => {
     // TODO: ssrで読み込み
@@ -37,35 +39,44 @@ export default function MyNewsDetail({ params }: { params: Promise<NewsArticle> 
     }
   };
 
-  // comments
-  // async function fetchComments() {
-  //   const { data } = await supabase
-  //     .from("mynews")
-  //     .select("*")
-  //     .eq("post_id", params.id)
-  //     .order("created_at", { ascending: false });
-  //   setComments(data ?? []);
-  // }
+  const FetchMyNewsComments = async () => {
+    // TODO: ssrで読み込み
+    try {
+      const {data , error} = await FetchComments(id);
+      if (error) {
+        console.error('Error fetching comments:', error);
+        return [];
+      }
+      setCommentList(data);
+    } catch (error) {
+      if (error instanceof Error) {
+        setCommentMessage(error.message);
+      } else {
+        console.error('Unexpected error', error);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // comments
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   if (comment === "") return;
-  //   const {
-  //     data: { user },
-  //   } = await supabase.auth.getUser();
-  //   await supabase.from("comments").insert({
-  //     content: comment,
-  //     post_id: params.id,
-  //     user_id: user?.id,
-  //   });
-  //   setComment("");
-  // };
-
+  // comments insert
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (comment === "") return;
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    await supabase.from("comments").insert({
+      id: id,
+      user_id: user?.id,
+      comment: comment,
+    });
+    setComment("");
+  };
   useEffect(() => {
     FetchMyNewsDetailData();
-    // fetchComments();
-  });
+    FetchMyNewsComments();
+  },[]);
 
   return (
     <>
@@ -101,35 +112,23 @@ export default function MyNewsDetail({ params }: { params: Promise<NewsArticle> 
 
         {/* comments */}
         <div className="p-comments mt-10 w-full mx-auto">
-        <h2 className="InputArea__title text-3xl mb-7">Comments</h2>
-          {/* <ul className="p-comments__post">
-            {comments.map((comment) => (
-              <li
-                key={comment.id}
-                className="c-userComment bg-[#C4C4C44D] rounded-md p-5 grid gap-7 grid-cols-[64px,auto] mb-7"
-              >
-                <div className="c-userComment__body">
-                  <p className="text-lg mb-4">{comment.content}</p>
-                  <p className="text-[#18A0FB80] text-lg">a min ago</p>
-                </div>
-              </li>
-            ))}
-          </ul> */}
+          <h2 className="InputArea__title text-3xl mb-7">Comments</h2>
+          {commentMessage && <p className="mt-2">{commentMessage}</p>}
+          {commentList && <p className="mt-2">{commentList.comment}</p>}
           <h2 className="InputArea__title text-3xl mb-7">Add Comments</h2>
-          {/* <form
+          <form
             className="p-comments__InputArea InputArea grid grid-cols-[auto,100px] gap-6 sm:gap-8 sm:grid-cols-[auto,172px] mb-7"
             onSubmit={(e) => handleSubmit(e)}
           >
-            <input
+            <textarea
               id="comment"
-              className="rounded-md border border-solid border-[#000] text-center p-2"
-              type="text"
+              className="rounded-md border border-solid border-[#000] text-left p-2"
               value={comment}
               placeholder="your comments..."
               onChange={(e) => setComment(e.target.value)}
             />
             <button className="InputArea__button w-full text-white rounded-md bg-[#18A0FB]">Comment</button>
-          </form> */}
+          </form>
         </div>
 
         </>

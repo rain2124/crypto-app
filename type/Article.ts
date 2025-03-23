@@ -7,7 +7,8 @@ export interface NewsArticle {
   publishedAt: string;
   image_url?: string;
 }
-export interface Comments {
-  id: string;
-  content: string;
-};
+export interface CommentType {
+  id?: string;
+  user_id?: string;
+  comment?: string;
+}

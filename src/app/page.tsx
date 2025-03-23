@@ -64,7 +64,8 @@ export default function HomePage() {
       });
       if (!res.ok) throw new Error('記事の登録に失敗しました');
       const result = await res.json();
-      setMessage(result.message || '記事が追加されました');
+      setMessage(result.message || 'mylistに記事を追加しました。');
+      if (message) alert(message);
     } catch (error) {
       if (error instanceof Error) {
         setMessage(error.message);
@@ -80,13 +81,13 @@ export default function HomePage() {
     <div className="px-6 py-10">
       <div>ログイン状況 : {session ? <span>ログイン中</span> : <span>未ログイン</span> }</div>
       <h1 className="text-3xl font-bold mb-6">CRYPTO NEWS</h1>
-      {message && <p className="mt-4">{message}</p>}
       <div className='grid-cols-2 gap-6 grid md:grid-cols-3 md:gap-8'>
       {loading ? (
         <p>Loading...</p>
       ) : articles?.length > 0 ? (
         articles.map((article, idx) => (
           <div key={idx} className="border-b pb-4">
+            {/* {message && <p className="mt-4">{message}</p>} */}
             <h2 className="text-xl font-semibold line-clamp-2">{article.title}</h2>
             {article.urlToImage && (
               <Image

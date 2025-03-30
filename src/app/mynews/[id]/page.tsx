@@ -6,6 +6,8 @@ import { FetchMyNewsDetail } from '@/app/api/fetchApi';
 import { FetchComments } from '@/app/api/fetchApi';
 import { NewsArticle } from '../../../../type/Article';
 import { CommentType } from '../../../../type/Article';
+import { v4 as uuidv4 } from 'uuid';
+// import CommentEdit from '@/app/mynews/[id]/components/CommentEdit.tsx/CommentEdit';
 import Image from 'next/image';
 
 export default function MyNewsDetail({ params }: { params: Promise<NewsArticle> }) {
@@ -15,10 +17,15 @@ export default function MyNewsDetail({ params }: { params: Promise<NewsArticle> 
   const { id } = use(params);
 
   // comments
-  const [comment, setComment] = useState<string>("");
+  // const [comment, setComment] = useState<string[]>([]);
+  const [newComment, setNewComment] = useState<string>('');
   const [commentMessage, setCommentMessage] = useState<string>('');
-  const [commentList, setCommentList] = useState<CommentType | null>(null);
+  const [commentLists, setCommentLists] = useState<CommentType[]>([]);
 
+  const [findCommentId, setFindCommentId] = useState<string | undefined>(undefined);
+  // const [editId, setEditId] = useState<string>('');
+  const [editComment, setEditComment] = useState<string>('');
+  //fetch mynews
   const FetchMyNewsDetailData = async () => {
     // TODO: ssrで読み込み
     try {
@@ -38,16 +45,18 @@ export default function MyNewsDetail({ params }: { params: Promise<NewsArticle> 
       setLoading(false);
     }
   };
-
+  // fetch comments
   const FetchMyNewsComments = async () => {
     // TODO: ssrで読み込み
     try {
       const {data , error} = await FetchComments(id);
+      // const res = await FetchComments(id);
       if (error) {
         console.error('Error fetching comments:', error);
         return [];
+      } else if (data) {
+        setCommentLists(data);
       }
-      setCommentList(data);
     } catch (error) {
       if (error instanceof Error) {
         setCommentMessage(error.message);
@@ -58,25 +67,55 @@ export default function MyNewsDetail({ params }: { params: Promise<NewsArticle> 
       setLoading(false);
     }
   };
-
   // comments insert
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (comment === "") return;
+    if (newComment === "") return;
     const {
       data: { user },
     } = await supabase.auth.getUser();
     await supabase.from("comments").insert({
-      id: id,
+      id: uuidv4(),
       user_id: user?.id,
-      comment: comment,
+      comment: newComment,
+      mynews_id: id
     });
-    setComment("");
+    setNewComment('');
   };
+  // update
+  const handleUpdate = async () => {
+    if (findCommentId === "" || editComment === "") return;
+    const { data: { user }, } = await supabase.auth.getUser();
+    await supabase.from("comments").update({
+      id: findCommentId,
+      user_id: user?.id,
+      comment: editComment,
+      mynews_id: id
+    }).eq('id', findCommentId);
+    setFindCommentId(undefined);
+    setEditComment('');
+  };
+  // comments delete
+  const handleDeleteComment = async (id: string) => {
+    const { error } = await supabase.from('comments').delete().eq('id', id);
+    if (error) {
+      console.error('Error deleting post:', error.message);
+    } else {
+      console.log('Post deleted successfully');
+    }
+  };
+
+  // findCommentId
+  const handleEditButton = async (id: string, comment: string) => {
+    setEditComment(comment);
+    setFindCommentId(id);
+  };
+
   useEffect(() => {
     FetchMyNewsDetailData();
     FetchMyNewsComments();
-  },[]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[commentLists]);
 
   return (
     <>
@@ -106,31 +145,79 @@ export default function MyNewsDetail({ params }: { params: Promise<NewsArticle> 
             </a>
           </div>
           <p className="text-sm text-gray-500 mt-2">
-          発行日: {new Date(myNewsList.publishedAt).toLocaleString()}
+          発行日: {new Date(myNewsList.published_at).toLocaleString('ja-JP', { hour12: false })}
           </p>
         </div>
-
-        {/* comments */}
-        <div className="p-comments mt-10 w-full mx-auto">
-          <h2 className="InputArea__title text-3xl mb-7">Comments</h2>
+        
+        {/* commentList */}
+        <div className="p-comments w-full mx-auto">
+          <h2 className="InputArea__title text-3xl my-6">Comments</h2>
+          <ul className="my-3">
           {commentMessage && <p className="mt-2">{commentMessage}</p>}
-          {commentList && <p className="mt-2">{commentList.comment}</p>}
-          <h2 className="InputArea__title text-3xl mb-7">Add Comments</h2>
+          {commentLists?.length > 0 ? (
+            commentLists.map((commentList, idx) => (
+            <li className='flex justify-between pb-4 mb-4 border-b-2 from-blue-500' key={idx}>
+            {findCommentId !== commentList.id ?
+              <>
+                <div>
+                  <p className="mt-2" >{commentList.comment}</p>
+                  <p className="mt-2" >{new Date(commentList.created_at).toLocaleString('ja-JP', { hour12: false })}</p>
+                </div>
+                <div className='flex'>
+                  <button
+                    onClick={() => handleEditButton(commentList.id, commentList.comment)}
+                    className='block w-auto text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-3'
+                  >
+                    edit
+                  </button>
+                  <button
+                    onClick={() => handleDeleteComment(commentList.id)}
+                    className='block w-auto text-white bg-gradient-to-r from-red-500 via-red-600 to-red-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-3'
+                  >
+                    delete
+                  </button>
+                </div>
+              </>
+              :
+              <>
+                <div>
+                  <textarea
+                    value={editComment}
+                    onChange={(e) => setEditComment(e.target.value)}
+                    className='rounded-md border border-solid border-[#000] text-left p-2'
+                  />
+                  <p className="mt-2">{commentList.created_at}</p>
+                </div>
+                <div className='flex'>
+                  <button
+                    onClick={() => handleUpdate()}
+                    className='block w-auto text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-3'
+                  >
+                    update
+                  </button>
+                </div>
+              </>
+              }
+            </li>
+          ))) : (
+            <p>not found</p>
+          )}
+          </ul>
+          {/* add comment */}
+          <h2 className="InputArea__title text-3xl my-6">Add Comments</h2>
           <form
-            className="p-comments__InputArea InputArea grid grid-cols-[auto,100px] gap-6 sm:gap-8 sm:grid-cols-[auto,172px] mb-7"
+            className="p-comments__InputArea InputArea grid grid-cols-[auto,100px] gap-6 sm:gap-8 sm:grid-cols-[auto,172px] mb-7 items-center"
             onSubmit={(e) => handleSubmit(e)}
           >
             <textarea
-              id="comment"
               className="rounded-md border border-solid border-[#000] text-left p-2"
-              value={comment}
+              value={newComment}
               placeholder="your comments..."
-              onChange={(e) => setComment(e.target.value)}
+              onChange={(e) => setNewComment(e.target.value)}
             />
-            <button className="InputArea__button w-full text-white rounded-md bg-[#18A0FB]">Comment</button>
+            <button className="block w-auto h-full text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Comment</button>
           </form>
         </div>
-
         </>
         ) : (
           <p>not found</p>

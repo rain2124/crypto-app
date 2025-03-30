@@ -58,7 +58,7 @@ export default function HomePage() {
           description: article.description,
           url: article.url,
           image_url: article.urlToImage === null ? '' : article.urlToImage,
-          published_at: article.publishedAt,
+          published_at: article.published_at,
           user_id: userInfo.data.user.id
         }),
       });
@@ -114,7 +114,7 @@ export default function HomePage() {
               }
             </div>
             <p className="text-sm text-gray-500 mt-2">
-              発行日: {new Date(article.publishedAt).toLocaleString()}
+              発行日: {new Date(article.published_at).toLocaleString()}
             </p>
           </div>
         ))

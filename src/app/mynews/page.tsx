@@ -14,7 +14,6 @@ export default function MyNewsList() {
   const [message, setMessage] = useState<string>('');
   const [myNewsLists, setMyNewsLists] = useState<NewsArticle[]>([]);
   const router = useRouter();
-  console.log(session);
 
   const fetchMyNews = async () => {
     // TODO: ssrで読み込み
@@ -93,7 +92,7 @@ export default function MyNewsList() {
                 </button>
               </div>
               <p className="text-sm text-gray-500 mt-2">
-                発行日: {new Date(myNewsList.publishedAt).toLocaleString()}
+                発行日: {new Date(myNewsList.published_at).toLocaleString()}
               </p>
             </div>
           ))

@@ -19,6 +19,6 @@ export const FetchComments = async (id: string) => {
   return await supabase
   .from('comments')
   .select('*')
-  .eq('id', id)
-  .single()
+  .eq('mynews_id', id)
+  .order('created_at', { ascending: false })
 };

@@ -6,7 +6,44 @@ Next.js、Supabase を使用し、外部apiの記事をマイニュースとし�
 [signin](https://crypto-app-six-livid.vercel.app/signin)  
 ユーザー名: design2124@gmail.com  
 パスワード: testuser  
+
+## 主な機能  
+### 1.認証機能  
+* Supabase Auth を使用した メール/パスワード認証
   
+### 2.ニュース管理機能  
+* News Api 読み込み
+* 外部 Api記事 mynews化
+    * mynews追加
+    * mynews削除
+    * mynews一覧表示
+    * mynews詳細ページ
+    * mynews詳細ページコメント追加
+
+## 技術構成  
+* フロントエンド
+    * Next.js 15（App Router 使用）
+    * React 18
+    * Tailwind CSS
+  
+* バックエンド
+    * Next.js API Routes
+    * Supabase（PostgreSQL）
+    * 認証（Auth）
+
+## データベース設計  
+### ニュース テーブル
+|  カラム  |  型  |  説明  |
+| --- | --- | --- |
+|  id  |  uuid  |  追加記事ID  |
+|  title  |  varchar  |  記事タイトル  |
+|  url  |  varchar  |  記事URL  |
+|  description  |  varchar  |  記事説明分  |
+|  image_url  |  varchar  |  記事画像  |
+|  published_at  |  varchar  |  記事が追加された日付  |
+|  user_id  |  text  |  記事追加したuserId  |
+
+
 
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).

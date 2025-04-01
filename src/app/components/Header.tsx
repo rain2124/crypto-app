@@ -27,7 +27,7 @@ export default function Header() {
           </li>
           {session ? <li><Link href="/mynews">MyNews</Link></li> : <></> }
           {session ? <></> : <li><Link href="/signin">SignIn</Link></li> }
-          <li><Link href="/signup" onClick={() => setIsOpen(false)}>SignUp</Link></li>
+          {session ? <></> : <li><Link href="/signup" onClick={() => setIsOpen(false)}>SignUp</Link></li> }
           {session ? <li><LogoutButton /></li> : <></> }
         </ul>
       </div>

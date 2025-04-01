@@ -1,3 +1,9 @@
+# クリプトニュース記事管理アプリ
+*このプロジェクトは、ユーザーごとに記事を登録し、コメントを追加するアプリケーションです。
+Next.js、Supabase を使用し、外部apiの記事をマイニュースとして扱い大きな出来事のニュースにコメントを追加するものとしています。*
+
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

@@ -32,7 +32,7 @@ Next.js、Supabase を使用し、外部apiの記事をマイニュースとし�
     * 認証（Auth）
 
 ## データベース設計  
-### ニュース テーブル
+### 1.ニュース テーブル
 |  カラム  |  型  |  説明  |
 | --- | --- | --- |
 |  id  |  uuid  |  追加記事ID  |
@@ -42,6 +42,17 @@ Next.js、Supabase を使用し、外部apiの記事をマイニュースとし�
 |  image_url  |  varchar  |  記事画像  |
 |  published_at  |  varchar  |  記事が追加された日付  |
 |  user_id  |  text  |  記事追加したuserId  |
+
+### 2.コメント テーブル
+|  カラム  |  型  |  説明  |
+| --- | --- | --- |
+|  id  |  uuid  |  コメントのID  |
+|  user_id  |  text  |  記事追加したuserId  |
+|  comment  |  varchar  |  追加したコメント  |
+|  mynews_id  |  text  |  コメントを追加した記事ID  |
+|  created_at  |  timestampts  |  コメントを追加した日付  |
+
+## アプリ動作フロー  
 
 
 

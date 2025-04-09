@@ -15,6 +15,7 @@ export default function MyNewsList() {
   const [myNewsLists, setMyNewsLists] = useState<NewsArticle[]>([]);
   const router = useRouter();
 
+  // supabase mynews fetch
   const fetchMyNews = async () => {
     // TODO: ssrで読み込み
     try {
@@ -35,6 +36,7 @@ export default function MyNewsList() {
     }
   };
 
+  // supabase mynews 削除機能
   const handleDeleteNews = async (mynewsId: string) => {
     const { error } = await supabase.from('mynews').delete().eq('id', mynewsId);
     if (error) {

@@ -6,6 +6,7 @@ import { supabase } from "../../../lib/supabaseClient"
 export default function LogoutButton() {
   const router = useRouter();
 
+  // logout機能
   const handleLogout = async () => {
     await supabase.auth.signOut();
     router.push("/signin");

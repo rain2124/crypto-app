@@ -10,6 +10,7 @@ export default function SignIn() {
   const [message, setMessage] = useState<string>('');
   const router = useRouter();
 
+  // signin
   const handleSignIn = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);

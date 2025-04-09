@@ -11,7 +11,7 @@ export default function SignUp() {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string>('');
   const router = useRouter();
-
+  // signup
   const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);

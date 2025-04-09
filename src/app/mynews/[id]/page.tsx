@@ -7,7 +7,6 @@ import { FetchComments } from '@/app/api/fetchApi';
 import { NewsArticle } from '../../../../type/Article';
 import { CommentType } from '../../../../type/Article';
 import { v4 as uuidv4 } from 'uuid';
-// import CommentEdit from '@/app/mynews/[id]/components/CommentEdit.tsx/CommentEdit';
 import Image from 'next/image';
 
 export default function MyNewsDetail({ params }: { params: Promise<NewsArticle> }) {
@@ -15,17 +14,13 @@ export default function MyNewsDetail({ params }: { params: Promise<NewsArticle> 
   const [message, setMessage] = useState<string>('');
   const [myNewsList, setMyNewsList] = useState<NewsArticle | null>(null);
   const { id } = use(params);
-
-  // comments
-  // const [comment, setComment] = useState<string[]>([]);
   const [newComment, setNewComment] = useState<string>('');
   const [commentMessage, setCommentMessage] = useState<string>('');
   const [commentLists, setCommentLists] = useState<CommentType[]>([]);
-
   const [findCommentId, setFindCommentId] = useState<string | undefined>(undefined);
-  // const [editId, setEditId] = useState<string>('');
   const [editComment, setEditComment] = useState<string>('');
-  //fetch mynews
+
+  // supabase mynews fetch
   const FetchMyNewsDetailData = async () => {
     // TODO: ssrで読み込み
     try {
@@ -45,7 +40,7 @@ export default function MyNewsDetail({ params }: { params: Promise<NewsArticle> 
       setLoading(false);
     }
   };
-  // fetch comments
+  // supabase comments fetch
   const FetchMyNewsComments = async () => {
     // TODO: ssrで読み込み
     try {
@@ -67,7 +62,7 @@ export default function MyNewsDetail({ params }: { params: Promise<NewsArticle> 
       setLoading(false);
     }
   };
-  // comments insert
+  // supabase comments insert機能
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (newComment === "") return;
@@ -82,7 +77,8 @@ export default function MyNewsDetail({ params }: { params: Promise<NewsArticle> 
     });
     setNewComment('');
   };
-  // update
+
+  // supabase comments update機能
   const handleUpdate = async () => {
     if (findCommentId === "" || editComment === "") return;
     const { data: { user }, } = await supabase.auth.getUser();
@@ -95,7 +91,7 @@ export default function MyNewsDetail({ params }: { params: Promise<NewsArticle> 
     setFindCommentId(undefined);
     setEditComment('');
   };
-  // comments delete
+  // supabase comments delete機能
   const handleDeleteComment = async (id: string) => {
     const { error } = await supabase.from('comments').delete().eq('id', id);
     if (error) {

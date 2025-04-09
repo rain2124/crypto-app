@@ -1,5 +1,6 @@
 import { supabase } from '../../../lib/supabaseClient';
 
+// api fetch mynews
 export const FetchMyNews = async () => {
   return await supabase
   .from('mynews')
@@ -7,6 +8,7 @@ export const FetchMyNews = async () => {
   .order('published_at', { ascending: false })
 };
 
+// api fetch mynewsdetail
 export const FetchMyNewsDetail = async (id: string) => {
   return await supabase
   .from('mynews')
@@ -15,6 +17,7 @@ export const FetchMyNewsDetail = async (id: string) => {
   .single()
 };
 
+// api fetch comments
 export const FetchComments = async (id: string) => {
   return await supabase
   .from('comments')
